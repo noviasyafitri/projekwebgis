@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Peta Sebaran Cagar Budaya Kabupaten Lampung Tengah</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            height: 100vh;
+        }
+
+        #judul {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            background-color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #deskripsi {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: rgba(255,255,255,0.95);
+            padding: 12px 20px;
+            border-radius: 10px;
+            width: 80%;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Judul dan Deskripsi -->
+    <div id="judul">Peta Sebaran Cagar Budaya Kabupaten Lampung Tengah</div>
+    <div id="deskripsi">
+        Kabupaten Lampung Tengah merupakan wilayah yang memiliki berbagai peninggalan sejarah dan kebudayaan lokal yang bernilai tinggi. 
+        Cagar budaya seperti situs purbakala, monumen tradisional, dan bangunan bersejarah tersebar di berbagai kecamatan dan menjadi bagian penting dari identitas daerah. 
+        Peta ini menyajikan persebaran cagar budaya dalam format spasial untuk mendukung upaya pelestarian serta pengembangan kebudayaan berbasis wilayah.
+    </div>
+
+    <!-- Div Peta -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+    <!-- Leaflet AJAX -->
+    <script src="leaflet.ajax.min.js"></script>
+
+    <script type="text/javascript">
+        // Inisialisasi peta (Koordinat Lampung Tengah)
+        var map = L.map('map').setView([-4.8683195, 104.9305311], 10);
+
+        // Tambahkan basemap
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Fungsi popup
+        function popUp(f, l) {
+            var out = [];
+            if (f.properties) {
+                for (var key in f.properties) {
+                    out.push(key + ": " + f.properties[key]);
+                }
+                l.bindPopup(out.join("<br />"));
+            }
+        }
+
+        // Layer batas administrasi
+        var admLayer = new L.GeoJSON.AJAX("admlamtim.geojson", {
+            onEachFeature: popUp
+        }).addTo(map);
+
+        // Layer cagar budaya
+        var budayaLayer = new L.GeoJSON.AJAX("cagar budaya.geojson", {
+            onEachFeature: popUp
+        }).addTo(map);
+    </script>
+
+</body>
+</html>

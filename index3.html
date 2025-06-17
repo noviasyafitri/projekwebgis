@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Peta Interaktif Sebaran Sarana Olahraga di Kabupaten Lampung Tengah</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #judul {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        #pengantar {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 10px;
+            width: 80%;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #map { 
+            height: 100vh; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Judul Peta -->
+    <div id="judul">Peta Interaktif Sebaran Sarana Olahraga di Kabupaten Lampung Tengah</div>
+
+    <!-- Pengantar -->
+    <div id="pengantar">
+        Kabupaten Lampung Tengah memiliki berbagai jenis sarana olahraga yang tersebar di berbagai wilayahnya, mulai dari lapangan sepak bola, gedung serbaguna, hingga fasilitas olahraga terpadu. Melalui peta ini, pengguna dapat melihat lokasi masing-masing sarana olahraga secara interaktif untuk mendukung perencanaan pembangunan dan pemanfaatan fasilitas secara merata.
+    </div>
+
+    <!-- Div untuk peta -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+    <!-- Leaflet AJAX untuk GeoJSON -->
+    <script src="leaflet.ajax.min.js"></script>
+
+    <script type="text/javascript">
+        // Inisialisasi peta
+        var map = L.map('map').setView([-4.8683195, 104.9305311], 10);
+
+        // Basemap OSM
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Fungsi popup GeoJSON
+        function popUp(f, l) {
+            var out = [];
+            if (f.properties) {
+                for (var key in f.properties) {
+                    out.push(key + ": " + f.properties[key]);
+                }
+                l.bindPopup(out.join("<br />"));
+            }
+        }
+
+        // Layer GeoJSON
+        var admLayer = new L.GeoJSON.AJAX("admlamtim.geojson", { onEachFeature: popUp }).addTo(map);
+        var olahragaLayer = new L.GeoJSON.AJAX("saranaolahragaa.geojson", { onEachFeature: popUp }).addTo(map);
+    </script>
+</body>
+</html>
